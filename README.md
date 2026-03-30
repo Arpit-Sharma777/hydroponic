@@ -50,6 +50,56 @@ Provides real-time monitoring, anomaly visualization, and operational controls.
 - pandas, numpy, matplotlib, seaborn (data analysis)
 - joblib (model persistence)
 
+## Notebook Training and Analysis
+
+The notebook was used to train multiple ML models, evaluate them, and select the final deployment model.
+
+### Training and Evaluation Workflow
+
+1. Data preprocessing and feature scaling
+2. Class imbalance handling using SMOTE
+3. Multi-model training and comparison
+4. Evaluation with accuracy, precision, recall, F1-score, and confusion matrix
+5. Threshold experimentation for improved abnormal-class detection
+6. Final model export with joblib
+
+### Models Evaluated
+
+- Random Forest
+- Random Forest with SMOTE
+- Tuned Random Forest
+- SVM
+- SVM with adjusted threshold
+- KNN (including multiple k values)
+- ANN (TensorFlow/Keras)
+
+### Analysis Graphs Included in the Notebook
+
+- Class Distribution (countplot)
+- Correlation Matrix (heatmap)
+- Confusion Matrix - Random Forest
+- Feature Importance - Random Forest
+- Confusion Matrix - Random Forest (SMOTE)
+- Confusion Matrix - Tuned RF
+- Confusion Matrix - Adjusted Threshold
+- Confusion Matrix - SVM
+- Confusion Matrix - SVM (Adjusted Threshold 0.6)
+- Confusion Matrix - KNN
+- Confusion Matrix - ANN
+
+### Final Model Selection
+
+The final production model selected for backend inference is Random Forest.
+
+Notebook experiments showed that imbalance handling (SMOTE) and threshold adjustment improved abnormal-class detection behavior. A key notebook observation states that abnormal-class recall improved from 0% to 27% after applying SMOTE and threshold adjustment.
+
+### Exported Artifacts from Notebook
+
+- models/hydroponic_rf_model.pkl
+- models/scaler.pkl
+
+These files are required by the backend application at startup.
+
 ## Installation
 
 1. Create and activate a Python virtual environment.
