@@ -15,6 +15,22 @@ Serves predictions, applies safety rules, tracks history/statistics, and returns
 3. Frontend Dashboard (`frontend/dashboard.py`)
 Provides real-time monitoring, anomaly visualization, and operational controls.
 
+## 🔧 Technical Stack
+
+- **Frontend Framework**: Streamlit
+- **Visualization**: Plotly
+- **Data Processing**: Pandas
+- **HTTP Requests**: Requests library
+- **Auto-Refresh**: streamlit-autorefresh
+
+## 📝 Notes
+
+- Dashboard maintains last 100 sensor readings
+- Data can be exported in CSV or JSON format
+- Backend must be running for predictions
+- System statistics persist during session
+
+
 ## Repository Structure
 
 ```text
@@ -152,6 +168,103 @@ streamlit run dashboard.py
 3. Open dashboard in browser:
 - `http://localhost:8501`
 
+## 📊 Dashboard Sections
+
+### 1. Sensor Input Panel
+- **Water Quality Tab**: pH, TDS, Water Temperature
+- **Climate Tab**: Air Temperature, Humidity
+- **Levels Tab**: Water Level monitoring
+
+### 2. AI Intelligence Center
+- Real-time status display
+- Abnormality risk gauge
+- Relay control status
+- AI decision reasoning
+
+### 3. Analytics Dashboard
+- **Time Series**: Multi-parameter trend analysis
+- **Parameter Analysis**: Distribution and range visualization
+- **Correlation Matrix**: Heat map and scatter plots
+- **Alert History**: Timeline of system events
+
+### 4. Configuration Sidebar
+- Backend connection status
+- Adjustable sensor thresholds
+- System statistics
+- Data management controls
+
+## 🎨 UI Enhancements
+
+- **Gradient Styling**: Modern dark theme with vibrant accents
+- **Interactive Charts**: Powered by Plotly for rich visualizations
+- **Responsive Layout**: Optimized for different screen sizes
+- **Status Animations**: Pulsing alerts for better visibility
+- **Professional Cards**: Clean, organized information presentation
+
+## 📈 Data Visualization
+
+The dashboard includes multiple visualization types:
+- Line charts for trend analysis
+- Gauge charts for risk assessment
+- Histograms for distribution analysis
+- Box plots for range visualization
+- Heat maps for correlation analysis
+- Scatter plots for multi-parameter relationships
+
+## ⚙️ Configuration
+
+### Threshold Settings (Sidebar)
+- **pH Range**: 5.5 - 6.5 (adjustable)
+- **TDS Range**: 800 - 1500 ppm (adjustable)
+- **Temperature Range**: 18 - 28°C (adjustable)
+
+### Auto-Refresh
+- Default: 5 seconds
+- Can be modified in the code (st_autorefresh interval)
+
+## 🛡️ Safety Features - Grace Period System
+
+### How It Works
+The backend implements an intelligent **grace period** mechanism to prevent false emergency shutdowns:
+
+**Critical Reading Detection:**
+1. **First Critical Reading** → System activates **CORRECTION MODE** (first warning)
+2. **Second Consecutive Critical Reading** → System triggers **EMERGENCY SHUTDOWN** (confirmed hazard)
+3. **Non-Critical Reading at Any Point** → Grace counter resets to 0 (false alarm avoided)
+
+### Example Scenario
+```
+Reading 1: pH = 2.7 (CRITICAL) → ACTIVATE_CORRECTION (1/2 threshold)
+Reading 2: pH = 2.8 (CRITICAL) → EMERGENCY_SHUTDOWN (confirmed)
+
+OR
+
+Reading 1: pH = 2.7 (CRITICAL) → ACTIVATE_CORRECTION (1/2 threshold)
+Reading 2: pH = 5.7 (NORMAL)  → System recovers, counter resets to 0
+```
+
+### Benefits
+- 🛡️ Eliminates false shutdowns from sensor noise
+- ⚡ Gives system time to auto-correct minor fluctuations
+- 🎯 Maintains safety with confirmed hazard detection
+- 📊 Tracks grace state in AI Intelligence Center
+
+## 🔧 Technical Stack
+
+- **Frontend Framework**: Streamlit
+- **Visualization**: Plotly
+- **Data Processing**: Pandas
+- **HTTP Requests**: Requests library
+- **Auto-Refresh**: streamlit-autorefresh
+
+## 📝 Notes
+
+- Dashboard maintains last 100 sensor readings
+- Data can be exported in CSV or JSON format
+- Backend must be running for predictions
+- System statistics persist during session
+
+
 ## API Quick Reference
 
 Base URL:
@@ -211,6 +324,28 @@ Ensure `backend/app.py` is running on port `5000`.
 
 - Package installation errors:
 Use Python `3.10` or `3.11` for better compatibility with scientific stack versions.
+
+## 💡 Tips
+
+1. Use the sidebar to monitor backend connection status
+2. Adjust thresholds based on your crop requirements
+3. Export data regularly for historical analysis
+4. Monitor the Alert History tab for patterns
+5. Use correlation analysis to optimize parameters
+
+
+## 🎯 Capstone Project Features
+
+This dashboard demonstrates:
+- ✅ IoT Integration
+- ✅ Real-time Data Processing
+- ✅ Machine Learning Integration
+- ✅ Advanced Data Visualization
+- ✅ User-Friendly Interface
+- ✅ Automated Monitoring & Control
+- ✅ Intelligent Grace Period Safety System
+- ✅ Data Export & Analysis
+- ✅ Professional UI/UX Design
 
 ## Project Goal
 
