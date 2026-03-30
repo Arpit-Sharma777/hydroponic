@@ -1,0 +1,23 @@
+# Core ML and data processing
+numpy
+pandas
+scikit-learn
+imbalanced-learn
+joblib
+
+# Notebook analysis and visualization
+matplotlib
+seaborn
+jupyterlab
+tensorflow
+
+# Backend API
+flask
+flask-cors
+plyer
+
+# Frontend dashboard
+streamlit
+streamlit-autorefresh
+plotly
+requests

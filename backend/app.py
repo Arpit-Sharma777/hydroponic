@@ -4,6 +4,9 @@ import joblib
 import numpy as np
 from datetime import datetime
 import logging
+from plyer import notification
+import threading
+import time
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend communication
@@ -35,6 +38,8 @@ MAX_HISTORY = 100
 # Grace rule: Track consecutive critical readings
 consecutive_critical_count = 0
 CRITICAL_GRACE_THRESHOLD = 2  # Require 2 consecutive critical readings before emergency shutdown
+latest_data = None
+last_status = None
 
 
 def safety_rule_engine(data):
@@ -126,6 +131,15 @@ def validate_input(data):
     
     return True, None
 
+def send_notification(title, message):
+    try:
+        notification.notify(
+            title=title,
+            message=message,
+            timeout=5
+        )
+    except:
+        logger.warning("Notification failed")
 
 @app.route("/", methods=["GET"])
 def health_check():
@@ -143,6 +157,8 @@ def health_check():
 def predict():
     try:
         data = request.json
+        global latest_data
+        latest_data = data
         
         if not data:
             return jsonify({"error": "No data provided"}), 400
@@ -230,6 +246,7 @@ def predict():
             "sensor_data": data
         }
         
+        
         # 8️⃣ Store in history
         prediction_history.append(response)
         if len(prediction_history) > MAX_HISTORY:
@@ -238,6 +255,19 @@ def predict():
         # Log the prediction
         logger.info(f"Prediction: {response['status']} | Prob: {prob:.2f} | Source: {decision_source}")
         
+        global last_status
+
+        current_status = "ABNORMAL" if final_prediction == 1 else "NORMAL"
+
+        if current_status != last_status:
+            if current_status == "ABNORMAL":
+                send_notification("🚨 Hydroponic Alert", reason)
+            else:
+                send_notification("✅ System Normal", "All parameters OK")
+
+            last_status = current_status
+ 
+
         return jsonify(response), 200
     
     except Exception as e:
@@ -324,6 +354,48 @@ def internal_error(error):
     return jsonify({"error": "Internal server error"}), 500
 
 
+def monitor_loop():
+    global latest_data, last_status
+
+    while True:
+        if latest_data:
+            try:
+                rule_triggered, rule_reason, severity = safety_rule_engine(latest_data)
+
+                features = np.array([[
+                    latest_data["pH"],
+                    latest_data["TDS"],
+                    latest_data["water_level"],
+                    latest_data["DHT_temp"],
+                    latest_data["DHT_humidity"],
+                    latest_data["water_temp"]
+                ]])
+
+                features_scaled = scaler.transform(features)
+                prob = model.predict_proba(features_scaled)[0][1]
+
+                ml_prediction = int(prob > THRESHOLD)
+
+                if rule_triggered or ml_prediction == 1:
+                    current_status = "ABNORMAL"
+                    reason = rule_reason if rule_triggered else "ML anomaly detected"
+                else:
+                    current_status = "NORMAL"
+                    reason = "System Normal"
+
+                if current_status != last_status:
+                    if current_status == "ABNORMAL":
+                        send_notification("🚨 Hydroponic Alert", reason)
+                    else:
+                        send_notification("✅ System Normal", "All parameters OK")
+
+                    last_status = current_status
+
+            except Exception as e:
+                logger.error(f"Monitoring error: {e}")
+
+        time.sleep(5)
+
 if __name__ == "__main__":
     logger.info("🌱 Starting Smart Hydroponic AI Backend Server...")
     logger.info(f"📊 ML Threshold: {THRESHOLD}")
@@ -332,4 +404,7 @@ if __name__ == "__main__":
     if model is None or scaler is None:
         logger.warning("⚠️ Models not loaded - predictions will fail!")
     
+    thread = threading.Thread(target=monitor_loop)
+    thread.daemon = True
+    thread.start()
     app.run(host="0.0.0.0", port=5000, debug=True)
