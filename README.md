@@ -33,13 +33,35 @@ Provides real-time monitoring, anomaly visualization, and operational controls.
 		`-- esp32_code.ino
 ```
 
-## Key Features
+## key Features
 
-- Hybrid decision system: rule engine + ML probability scoring.
-- Grace-period safety logic: emergency shutdown only after repeated critical readings.
-- Real-time API-backed Streamlit dashboard with auto-refresh.
-- Prediction history, analytics, and export support.
-- Notebook workflow for training/evaluation and model artifact generation.
+### Real-Time Monitoring
+- **Live Sensor Data**: Monitor pH, TDS, water level, temperature, humidity in real-time
+- **Auto-Refresh**: Dashboard automatically updates every 5 seconds
+- **KPI Metrics**: Quick overview of critical parameters at a glance
+
+### AI-Powered Intelligence
+- **Abnormality Detection**: Machine learning model analyzes system status
+- **Risk Assessment**: Visual gauge showing abnormality probability
+- **Automated Alerts**: Instant notifications for abnormal conditions
+- **Smart Recommendations**: AI-driven corrective action suggestions
+- **Grace Period Protection**: Requires 2 consecutive critical readings before emergency shutdown (prevents false alarms)
+
+### Advanced Analytics
+- **Time Series Visualization**: Track parameter trends over time
+- **Distribution Analysis**: Statistical analysis of sensor readings
+- **Correlation Matrix**: Understand relationships between parameters
+- **Alert History**: Complete log of all system events
+
+### Customizable Thresholds
+- Configure optimal ranges for all parameters
+- Real-time threshold violation detection
+- Color-coded status indicators
+
+### Data Management
+- **Export Capabilities**: Download data in CSV or JSON format
+- **Historical Records**: Maintains up to 100 recent readings
+- **Statistics Tracking**: System health metrics and performance indicators
 
 ## Tech Stack
 
